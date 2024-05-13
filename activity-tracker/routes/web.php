@@ -23,7 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route'y dla kategorii
-    Route::get('/category', [CategoryController::class, 'index'])->name('category.index'); // Określamy, że pod 'category.index' kryję się logika która jest zawarta w funckji index w CategoryController
+     // Określamy, że pod 'category.index' kryję się logika która jest zawarta w funckji index w CategoryController
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+    Route::post('/category', [CategoryController::class, 'create'])->name('category.index');
+
 });
+
 
 require __DIR__.'/auth.php';
