@@ -46,8 +46,18 @@ const form = useForm({
                 </div>
             </div>
         </div>
+
+        <div class="mt-8 flex justify-center">
+            <h3 class = "text-black ">Statystyki kategorii:</h3>
+            <div v-for="category in categories" :key="category.id" class="p-4 border rounded mt-4">
+                <h4>{{ category.name }}</h4>
+                <p>Ilość aktywności:</p>
+                <p>Średni czas trwania:</p>
+            </div>
+        </div>
     </AuthenticatedLayout>
 </template>
+
 
 <script>
 import axios from 'axios';
