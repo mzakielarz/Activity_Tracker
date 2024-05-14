@@ -33,11 +33,17 @@ const form = useForm({
                             </button>
 
                         </form>
-<div class="grid grid-cols-3 gap-4 mt-8">
+                        <div class="grid grid-cols-3 gap-4 mt-8">
     <div v-for="category in categories" :key="category.id" class="p-4 border rounded cursor-pointer hover:bg-gray-200">
-        <router-link :to="`/categories/${category.id}`">
+        <router-link :to="`/categories/${category.id}`" class="mr-4">
             {{ category.name }}
         </router-link>
+        <form @submit.prevent="form.delete('/category/{id}')">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Usuń
+            </button>
+        </form>
     </div>
 </div>
 

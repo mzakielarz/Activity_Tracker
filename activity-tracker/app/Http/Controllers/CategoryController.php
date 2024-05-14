@@ -30,4 +30,17 @@ class CategoryController extends Controller
         $categories = Category::all();
         return Inertia::render('Category', compact('categories'));
     }
+    public function destroy($id)
+{
+    $category = Category::find($id);
+
+    if ($category) {
+        $category->delete();
+        return redirect()->back()->with('message', 'Kategoria została usunięta!');
+    } else {
+        return redirect()->back()->with('error', 'Nie znaleziono kategorii!');
+    }
+
+}
+
 }

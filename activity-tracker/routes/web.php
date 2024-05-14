@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
      // Określamy, że pod 'category.index' kryję się logika która jest zawarta w funckji index w CategoryController
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
+    Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
 });
 
