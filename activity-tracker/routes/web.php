@@ -28,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
+    //krótsza wersja usuwania kategorii
+    // Route::delete('/category/{category}', [CategoryController::class, 'destroy2'])->name('category.destroy');
+
 });
 
 

@@ -10,11 +10,8 @@ class CategoryController extends Controller
 {
     public function index(){
 
-        $categories = [
-            (object) ['id' => 1, 'name' => 'Kategoria 1'],
-            (object) ['id' => 2, 'name' => 'Kategoria 2'],
-            (object) ['id' => 3, 'name' => 'Kategoria 3'],
-        ];
+        // pobieranie danych z bazy
+        $categories = Category::all();
 
         return Inertia::render('Category', compact('categories'));
     }
@@ -27,20 +24,29 @@ class CategoryController extends Controller
         $newCategory->name = $request->name;
         $newCategory->user_id = auth()->id();
         $newCategory->save();
-        $categories = Category::all();
-        return Inertia::render('Category', compact('categories'));
+
+        // Próba zapisu do bazy danych
+        if ($newCategory->save()) {
+            // Przekierowanie do listy kategorii po pomyślnym zapisaniu - dzięki temu unikamy zduplikowanej logiki z ponownym pobieraniem kategorii, zamiast tego odwołujemy się do funkcji która już to robi
+            return redirect()->route('category.index');
+        }
     }
+
     public function destroy($id)
-{
-    $category = Category::find($id);
+    {
+        $category = Category::find($id);
 
-    if ($category) {
-        $category->delete();
-        return redirect()->back()->with('message', 'Kategoria została usunięta!');
-    } else {
-        return redirect()->back()->with('error', 'Nie znaleziono kategorii!');
+        if ($category) {
+            $category->delete();
+            return redirect()->back()->with('message', 'Kategoria została usunięta!');
+        } else {
+            return redirect()->back()->with('error', 'Nie znaleziono kategorii!');
+        }
     }
 
-}
-
+    //krósza wersja usuwania kategorii - nie przekazujemy id kategorii, tylko cały obiekt kategorii(tak, tak można), dlatego nie musimy pisać dodatkowej logiki żeby sprawdzić czy kategoria z danym id istnieje, czy można ją pobrać z bazy itp
+    // public function destroy2(Category $category)
+    // {
+    //     $category->delete();
+    // }
 }
