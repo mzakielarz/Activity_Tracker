@@ -7,7 +7,7 @@ defineProps({
 });
 
 const form = useForm({
-    name: '',
+    name: "",
 });
 
 </script>
@@ -26,7 +26,7 @@ const form = useForm({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <form @submit.prevent = ""submitForm >
+                        <form @submit.prevent="form.post('/category')" >
                             <input v-model="form.name" type="text" placeholder="wpisz nazwę kategorii" required>
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Dodaj kategorię
@@ -59,30 +59,5 @@ const form = useForm({
 </template>
 
 
-<script>
-import axios from 'axios';
 
-export default {
-    data() {
-        return {
-            form: {
-                name: '',
-            },
-        };
-    },
-    methods: {
-        submitForm() {
-            axios.post('/categories', this.form)
-                .then(response => {
-
-                    this.form.name = '';
-                })
-                .catch(error => {
-
-                    console.error(error);
-                });
-        },
-    },
-};
-</script>
 
