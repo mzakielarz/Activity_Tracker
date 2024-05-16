@@ -122,7 +122,9 @@ const form = useForm({
                     <div class="p-6 bg-gray-100 text-gray-900 rounded-lg">
                         <form
                             @submit.prevent="
-                                form.post('/category', { preserveState: false })
+                                form.post('/category', {
+                                    preserveState: false,
+                                })
                             "
                             class="flex items-center space-x-4"
                         >
@@ -142,6 +144,7 @@ const form = useForm({
                         </form>
                         <div
                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8"
+                            v-if="categories.length"
                         >
                             <div
                                 v-for="category in categories"
@@ -173,7 +176,7 @@ const form = useForm({
             </div>
         </div>
 
-        <div class="py-8 flex flex-col items-center">
+        <div class="py-8 flex flex-col items-center" v-if="categories.length">
             <h3 class="text-xl font-semibold text-gray-800">
                 Statystyki kategorii:
             </h3>
@@ -201,9 +204,21 @@ const form = useForm({
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+        <div
+            v-else
+            class="flex items-center justify-center py-12 bg-red-100 text-red-700 rounded-lg border border-red-400"
+        >
+            Brak danych
+        </div>
+        <div
+            class="max-w-4xl rounded px-8 py-8 mx-auto bg-white"
+            v-if="categories.length"
+        >
+            <Bar :data="chartDataActivitiesCount" :options="chartOptions" />
+        </div>
 
-    <div class="max-w-2xl mx-auto my-8">
-        <Bar :data="chartDataActivitiesCount" :options="chartOptions" />
-    </div>
+        <!-- Xd -->
+        <br />
+        <br />
+    </AuthenticatedLayout>
 </template>
