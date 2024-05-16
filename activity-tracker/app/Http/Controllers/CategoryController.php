@@ -8,13 +8,33 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index(){
+public function index()
+{
+    $categories = Category::with('activities')
+        ->withCount('activities')
+        ->get();
 
-        // pobieranie danych z bazy
-        $categories = Category::with('activities')->withCount('activities')->withAvg('activities', 'spent_time')->get();
+    // Manually calculate the average spent time
+    foreach ($categories as $category) {
+        $totalSeconds = 0;
+        $activityCount = $category->activities_count;
 
-        return Inertia::render('Category', compact('categories'));
+        foreach ($category->activities as $activity) {
+            $timeParts = explode(':', $activity->spent_time);
+            $seconds = ($timeParts[0] * 3600) + ($timeParts[1] * 60) + $timeParts[2];
+            $totalSeconds += $seconds;
+        }
+
+        if ($activityCount > 0) {
+            $averageSeconds = $totalSeconds / $activityCount;
+            $category['activities_avg_spent_time'] = gmdate('H:i:s', $averageSeconds);
+        } else {
+            $category['activities_avg_spent_time'] = null;
+        }
     }
+
+    return Inertia::render('Category', compact('categories'));
+}
 
     public function store(Request $request){
         $validated = $request->validate([
