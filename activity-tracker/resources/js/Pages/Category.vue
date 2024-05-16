@@ -1,11 +1,106 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link, router } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
+import { Bar } from "vue-chartjs";
 
-defineProps({
+// Consider moveing it to separate component
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+} from "chart.js";
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+const props = defineProps({
     categories: Array,
 });
 
+const chartDataActivitiesCount = computed(() => {
+    return {
+        labels: props.categories.map((category) => category.name),
+        datasets: [
+            {
+                label: "Ilość aktywności dla zadanej kategorii",
+                backgroundColor: "#f87979",
+                borderColor: "#f06262",
+                borderWidth: 1,
+                hoverBackgroundColor: "#f06262",
+                hoverBorderColor: "#f87979",
+                data: props.categories.map(
+                    (category) => category.activities_count
+                ),
+            },
+        ],
+    };
+});
+
+// Chart options
+const chartOptions = ref({
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: "rgba(200, 200, 200, 0.3)",
+            },
+            ticks: {
+                color: "#4a4a4a",
+                font: {
+                    size: 14,
+                },
+            },
+        },
+        x: {
+            grid: {
+                color: "rgba(200, 200, 200, 0.3)",
+            },
+            ticks: {
+                color: "#4a4a4a",
+                font: {
+                    size: 14,
+                },
+            },
+        },
+    },
+    plugins: {
+        legend: {
+            labels: {
+                color: "#4a4a4a",
+                font: {
+                    size: 16,
+                },
+            },
+        },
+        tooltip: {
+            backgroundColor: "#f87979",
+            titleFont: {
+                size: 16,
+                weight: "bold",
+            },
+            bodyFont: {
+                size: 14,
+            },
+            borderColor: "#f06262",
+            borderWidth: 1,
+        },
+    },
+});
+
+// Define the form
 const form = useForm({
     name: "",
 });
@@ -27,7 +122,6 @@ const form = useForm({
                     <div class="p-6 bg-gray-100 text-gray-900 rounded-lg">
                         <form
                             @submit.prevent="
-                                // to było okey, preserveState dodałem żeby po wysłaniu formularza go resetować(tzn że input jest znowu pusty po wysłaniu)
                                 form.post('/category', { preserveState: false })
                             "
                             class="flex items-center space-x-4"
@@ -54,58 +148,20 @@ const form = useForm({
                                 :key="category.id"
                                 class="p-4 border border-black rounded-lg hover:bg-gray-200 flex items-center justify-between"
                             >
-                                <!-- Jeżeli chcemy mieć link z jakąś akcją powiązaną z backendem(tak jak w tym przypadku - przejście na inny widok) należy korzystać z komponentu <Link> z inertii + zwracaj uwagę na konsole w przeglądarce(devtools - f12 na chromie) bo wcześniej tu był router-link(gdyby to była apka w samym Vue to wtedy z niego by się korzystało), tylko nigdzie nie był importowany i w konsoli był ładny warning że to ni chuja nie zadziała -->
-                                <!-- na przyszłość -  w href'ie można korzystać z faktu że route'y można nazywać, czyli jeżeli w web.php jest np ->name('category.show') to tutaj można :href="route('category.show')" - paradoksalnie łatwiej się sie w tym połapać jak się trzyma konwencji nazewnicta tych metod -->
-                                <!-- <Link
-                                    :href="`/categories/${category.id}`"
-                                    class="text-lg font-semibold text-blue-600 hover:underline"
-                                >
-                                    {{ category.name }}
-                                </Link> -->
-
                                 <Link
                                     :href="route('category.show', { category })"
                                     class="text-lg font-semibold text-blue-600 hover:underline"
                                 >
                                     {{ category.name }}
                                 </Link>
-
-                                <!-- Podejście laravelove, jak słusznie pamiętasz u jaromira to się tak robiło -->
-                                <!-- <form
-                                    @submit.prevent="
-                                        form.delete('/category/{id}') - nie działa bo nie przekazujesz id, próbujesz odwołać się dosłownie pod adres '/category/{id}'
-                                    "
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="_method"
-                                        value="DELETE"
-                                    />
-                                    <button
-                                        type="submit"
-                                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                    >
-                                        Usuń
-                                    </button>
-                                </form> -->
-                                <!-- z inertią wygląda to tak, że nie trzeba żadnego dodatkowego formularza -->
-
                                 <button
                                     class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg"
                                     @click="
-                                        // router pozwala na manualne nawigowanie między routami, poniższy kod można czytać jak - manualnie chcę usunąć(delete) jakiś zasób wykorzystując logikę zawartą w 'category.destroy', z racji na to że 'category.destroy' przyjmuje id, to musimy to id przekazać
                                         router.delete(
                                             route('category.destroy', {
                                                 id: category.id,
                                             })
                                         )
-
-                                        // krótsza wersja usunięcia kategorii - odkomentuj to tutaj, w kontrolezre i web.php i zakumentuj obecną wersje, działać będzie tak samo a jest krótsze, może zostać obecna wersja, pokazuję to dla nauki że można robić rzeczy krócej/prościej
-                                        // router.delete(
-                                        //     route('category.destroy', {
-                                        //         category,
-                                        //     })
-                                        // );
                                     "
                                 >
                                     Usuń
@@ -137,13 +193,17 @@ const form = useForm({
                     </p>
                     <p class="text-gray-600">
                         Średni czas trwania:
-                        <span v-if="category.activities_avg_spent_time">{{
-                            category.activities_avg_spent_time
-                        }}</span>
+                        <span v-if="category.activities_avg_spent_time">
+                            {{ category.activities_avg_spent_time }}
+                        </span>
                         <span v-else>Brak aktywności</span>
                     </p>
                 </div>
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <div class="max-w-2xl mx-auto my-8">
+        <Bar :data="chartDataActivitiesCount" :options="chartOptions" />
+    </div>
 </template>
