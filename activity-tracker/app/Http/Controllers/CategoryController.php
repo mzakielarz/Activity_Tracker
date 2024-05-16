@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
 public function index()
 {
-    $categories = Category::with('activities')
-        ->withCount('activities')
-        ->get();
+    $categories = Auth::user()
+            ->categories()
+            ->with('activities')
+            ->withCount('activities')
+            ->get();
 
     // Manually calculate the average spent time
     foreach ($categories as $category) {
