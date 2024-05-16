@@ -11,7 +11,7 @@ class CategoryController extends Controller
     public function index(){
 
         // pobieranie danych z bazy
-        $categories = Category::all();
+        $categories = Category::with('activities')->withCount('activities')->withAvg('activities', 'spent_time')->get();
 
         return Inertia::render('Category', compact('categories'));
     }

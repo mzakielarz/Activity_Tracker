@@ -132,8 +132,16 @@ const form = useForm({
                     <h4 class="text-lg font-semibold text-gray-800">
                         {{ category.name }}
                     </h4>
-                    <p class="mt-2 text-gray-600">Ilość aktywności: ...</p>
-                    <p class="text-gray-600">Średni czas trwania: ...</p>
+                    <p class="mt-2 text-gray-600">
+                        Ilość aktywności: {{ category.activities_count }}
+                    </p>
+                    <p class="text-gray-600">
+                        Średni czas trwania:
+                        <span v-if="category.activities_avg_spent_time">{{
+                            category.activities_avg_spent_time
+                        }}</span>
+                        <span v-else>Brak aktywności</span>
+                    </p>
                 </div>
             </div>
         </div>
