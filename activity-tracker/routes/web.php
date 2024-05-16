@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+    Route::get('/category/{category}', [CategoryController::class, 'show'])->name('category.show');
+
+    Route::post('/activity/{category}', [ActivityController::class, 'store'])->name('activity.store');
+    Route::delete('/activity/{activity}', [ActivityController::class, 'destroy'])->name('activity.destroy');
 
     //krótsza wersja usuwania kategorii
     // Route::delete('/category/{category}', [CategoryController::class, 'destroy2'])->name('category.destroy');

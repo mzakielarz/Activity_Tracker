@@ -32,6 +32,11 @@ class CategoryController extends Controller
         }
     }
 
+    public function show(Category $category){
+        $category->load('activities');
+        return Inertia::render('Activity', compact('category'));
+    }
+
     public function destroy($id)
     {
         $category = Category::find($id);

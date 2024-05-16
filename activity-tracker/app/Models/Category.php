@@ -14,4 +14,8 @@ class Category extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    public function activities(){
+        return $this->hasMany(Activity::class);
+    }
 }

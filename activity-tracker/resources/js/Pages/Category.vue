@@ -56,8 +56,15 @@ const form = useForm({
                             >
                                 <!-- Jeżeli chcemy mieć link z jakąś akcją powiązaną z backendem(tak jak w tym przypadku - przejście na inny widok) należy korzystać z komponentu <Link> z inertii + zwracaj uwagę na konsole w przeglądarce(devtools - f12 na chromie) bo wcześniej tu był router-link(gdyby to była apka w samym Vue to wtedy z niego by się korzystało), tylko nigdzie nie był importowany i w konsoli był ładny warning że to ni chuja nie zadziała -->
                                 <!-- na przyszłość -  w href'ie można korzystać z faktu że route'y można nazywać, czyli jeżeli w web.php jest np ->name('category.show') to tutaj można :href="route('category.show')" - paradoksalnie łatwiej się sie w tym połapać jak się trzyma konwencji nazewnicta tych metod -->
-                                <Link
+                                <!-- <Link
                                     :href="`/categories/${category.id}`"
+                                    class="text-lg font-semibold text-blue-600 hover:underline"
+                                >
+                                    {{ category.name }}
+                                </Link> -->
+
+                                <Link
+                                    :href="route('category.show', { category })"
                                     class="text-lg font-semibold text-blue-600 hover:underline"
                                 >
                                     {{ category.name }}
