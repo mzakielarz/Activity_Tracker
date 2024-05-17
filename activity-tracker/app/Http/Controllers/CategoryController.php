@@ -40,9 +40,6 @@ public function index()
 }
 
     public function store(Request $request){
-        $validated = $request->validate([
-            'name' => 'required|unique:categories|max:255',
-        ]);
         $newCategory = new Category;
         $newCategory->name = $request->name;
         $newCategory->user_id = auth()->id();
