@@ -206,11 +206,12 @@ const form = useForm({
             </div>
         </div>
         <div
-            v-else
-            class="flex items-center justify-center py-12 bg-red-100 text-red-700 rounded-lg border border-red-400"
-        >
-            Brak danych
-        </div>
+    v-else
+    class="flex items-center justify-center py-12 bg-green-400 text-white-700 rounded-lg border border-black-900 text-2xl font-bold"
+>
+    Brak danych
+</div>
+
         <div
             class="max-w-4xl rounded px-8 py-8 mx-auto bg-white"
             v-if="categories.length"
