@@ -6,7 +6,7 @@ const props = defineProps({
     category: Object,
 });
 
-const form = useForm({ name: "", spent_time: "", created_time:"" });
+const form = useForm({ name: "", spent_time: "", created_date: "" });
 
 const addActivity = () => {
     form.post(route("activity.store", { category: props.category }), {
@@ -20,9 +20,9 @@ const deleteActivity = (activity) => {
 //foramtowanie daty aby pozbyć się godzin 00:00:00 tylko dać sam czas w foramcie PL
 const formatDate = (date) => {
     if (date) {
-        return new Date(date).toLocaleDateString('pl-PL');
+        return new Date(date).toLocaleDateString("pl-PL");
     }
-    return '';
+    return "";
 };
 </script>
 
@@ -77,15 +77,15 @@ const formatDate = (date) => {
 
                         <div class="mb-4">
                             <label
-                                for="created_time"
+                                for="created_date"
                                 class="block text-sm font-medium text-gray-700"
                             >
                                 Data dodania
                             </label>
                             <input
-                                v-model="form.created_time"
+                                v-model="form.created_date"
                                 type="date"
-                                id="created_time"
+                                id="created_date"
                                 required
                                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                             />
@@ -124,7 +124,7 @@ const formatDate = (date) => {
                             Czas trwania: {{ activity.spent_time }}
                         </p>
                         <p class="text-sm text-gray-600">
-                            Dodane dnia: {{ formatDate(activity.created_time) }}
+                            Dodane dnia: {{ formatDate(activity.created_date) }}
                         </p>
                     </div>
                 </div>
