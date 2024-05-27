@@ -194,6 +194,7 @@ const form = useForm({
                     <p class="mt-2 text-gray-600">
                         Ilość aktywności: {{ category.activities_count }}
                     </p>
+
                     <p class="text-gray-600">
                         Średni czas trwania:
                         <span v-if="category.activities_avg_spent_time">

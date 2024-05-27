@@ -6,7 +6,7 @@ const props = defineProps({
     category: Object,
 });
 
-const form = useForm({ name: "", spent_time: "" });
+const form = useForm({ name: "", spent_time: "", created_time:"" });
 
 const addActivity = () => {
     form.post(route("activity.store", { category: props.category }), {
@@ -16,6 +16,13 @@ const addActivity = () => {
 
 const deleteActivity = (activity) => {
     router.delete(route("activity.destroy", { activity }));
+};
+//foramtowanie daty aby pozbyć się godzin 00:00:00 tylko dać sam czas w foramcie PL
+const formatDate = (date) => {
+    if (date) {
+        return new Date(date).toLocaleDateString('pl-PL');
+    }
+    return '';
 };
 </script>
 
@@ -68,6 +75,22 @@ const deleteActivity = (activity) => {
                             />
                         </div>
 
+                        <div class="mb-4">
+                            <label
+                                for="created_time"
+                                class="block text-sm font-medium text-gray-700"
+                            >
+                                Data dodania
+                            </label>
+                            <input
+                                v-model="form.created_time"
+                                type="date"
+                                id="created_time"
+                                required
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
+                            />
+                        </div>
+
                         <div>
                             <button
                                 type="submit"
@@ -99,6 +122,9 @@ const deleteActivity = (activity) => {
                         </h3>
                         <p class="text-sm text-gray-600">
                             Czas trwania: {{ activity.spent_time }}
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            Dodane dnia: {{ formatDate(activity.created_time) }}
                         </p>
                     </div>
                 </div>
