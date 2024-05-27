@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, router } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
     category: Object,
@@ -24,6 +25,13 @@ const formatDate = (date) => {
     }
     return "";
 };
+
+const maxDate = computed(() => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().slice(0, 10);
+});
 </script>
 
 <template>
@@ -86,6 +94,7 @@ const formatDate = (date) => {
                                 v-model="form.created_date"
                                 type="date"
                                 id="created_date"
+                                :max="maxDate"
                                 required
                                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                             />
