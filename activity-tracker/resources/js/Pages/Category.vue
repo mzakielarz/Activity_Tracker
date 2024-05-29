@@ -1,10 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm, Link, router } from "@inertiajs/vue3";
+import { Head, useForm, Link, router, usePage } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { Bar } from "vue-chartjs";
-
-// Consider moving it to a separate component
 import {
     Chart as ChartJS,
     Title,
@@ -100,10 +98,16 @@ const chartOptions = ref({
     },
 });
 
-// Define the form
 const form = useForm({
     name: "",
 });
+
+// No jakby było wiecej query paramsów to by się mogło psuć, a tak to będzie git
+const page = usePage();
+const query = ref(page.url.split("=")[1]);
+const currentFilter = computed(() => query.value || "all");
+
+const isActiveFilter = (filter) => currentFilter.value === filter;
 </script>
 
 <template>
@@ -182,27 +186,46 @@ const form = useForm({
             </h3>
 
             <div class="flex space-x-4 my-4">
-                <!-- Do każdego linka doklejany jest odpowiedni params -->
                 <Link
                     :href="route('category.index', { maxCreatedDate: 'today' })"
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    :class="[
+                        'px-4 py-2 rounded',
+                        isActiveFilter('today')
+                            ? 'bg-green-500 text-white'
+                            : 'bg-blue-500 text-white hover:bg-blue-700',
+                    ]"
                     >Dziś</Link
                 >
                 <Link
                     :href="route('category.index', { maxCreatedDate: '7days' })"
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    :class="[
+                        'px-4 py-2 rounded',
+                        isActiveFilter('7days')
+                            ? 'bg-green-500 text-white'
+                            : 'bg-blue-500 text-white hover:bg-blue-700',
+                    ]"
                     >7 dni</Link
                 >
                 <Link
                     :href="
                         route('category.index', { maxCreatedDate: '30days' })
                     "
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    :class="[
+                        'px-4 py-2 rounded',
+                        isActiveFilter('30days')
+                            ? 'bg-green-500 text-white'
+                            : 'bg-blue-500 text-white hover:bg-blue-700',
+                    ]"
                     >30 dni</Link
                 >
                 <Link
                     :href="route('category.index')"
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    :class="[
+                        'px-4 py-2 rounded',
+                        isActiveFilter('all')
+                            ? 'bg-green-500 text-white'
+                            : 'bg-blue-500 text-white hover:bg-blue-700',
+                    ]"
                     >Wszystkie</Link
                 >
             </div>
