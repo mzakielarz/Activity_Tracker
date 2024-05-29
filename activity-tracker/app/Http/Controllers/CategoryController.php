@@ -80,8 +80,31 @@ class CategoryController extends Controller
         }
     }
 
-    public function show(Category $category){
-        $category->load('activities');
+    public function show(Category $category, Request $request){
+
+        $maxCreatedDate = $request->maxCreatedDate; // zakładam na sztywno że wartości 'today', '7days', '30days'
+        $dateThreshold = null;
+
+        switch ($maxCreatedDate) {
+            case 'today':
+                $dateThreshold = Carbon::today();
+                break;
+            case '7days':
+                $dateThreshold = Carbon::now()->subDays(7);
+                break;
+            case '30days':
+                $dateThreshold = Carbon::now()->subDays(30);
+                break;
+            default:
+                $dateThreshold = null;
+                break;
+        }
+
+        $category->load(['activities' => function ($query) use ($dateThreshold) {
+                if ($dateThreshold) {
+                    $query->where('created_date', '>=', $dateThreshold);
+                }
+            }]);
         return Inertia::render('Activity', compact('category'));
     }
 

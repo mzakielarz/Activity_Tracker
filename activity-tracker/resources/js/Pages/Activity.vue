@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm, router } from "@inertiajs/vue3";
+import { Head, useForm, router, usePage, Link } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 
 const props = defineProps({
     category: Object,
@@ -25,6 +26,13 @@ const addActivity = () => {
 const deleteActivity = (activity) => {
     router.delete(route("activity.destroy", { activity }));
 };
+
+// No jakby było wiecej query paramsów to by się mogło psuć, a tak to będzie git
+const page = usePage();
+const query = ref(page.url.split("=")[1]);
+const currentFilter = computed(() => query.value || "all");
+
+const isActiveFilter = (filter) => currentFilter.value === filter;
 </script>
 
 <template>
@@ -102,6 +110,64 @@ const deleteActivity = (activity) => {
                             </button>
                         </div>
                     </form>
+                </div>
+
+                <div class="flex items-center justify-center space-x-4 my-4">
+                    <Link
+                        :href="
+                            route('category.show', {
+                                category,
+                                maxCreatedDate: 'today',
+                            })
+                        "
+                        :class="[
+                            'px-4 py-2 rounded',
+                            isActiveFilter('today')
+                                ? 'bg-green-500 text-white'
+                                : 'bg-blue-500 text-white hover:bg-blue-700',
+                        ]"
+                        >Dziś</Link
+                    >
+                    <Link
+                        :href="
+                            route('category.show', {
+                                category,
+                                maxCreatedDate: '7days',
+                            })
+                        "
+                        :class="[
+                            'px-4 py-2 rounded',
+                            isActiveFilter('7days')
+                                ? 'bg-green-500 text-white'
+                                : 'bg-blue-500 text-white hover:bg-blue-700',
+                        ]"
+                        >7 dni</Link
+                    >
+                    <Link
+                        :href="
+                            route('category.show', {
+                                category,
+                                maxCreatedDate: '30days',
+                            })
+                        "
+                        :class="[
+                            'px-4 py-2 rounded',
+                            isActiveFilter('30days')
+                                ? 'bg-green-500 text-white'
+                                : 'bg-blue-500 text-white hover:bg-blue-700',
+                        ]"
+                        >30 dni</Link
+                    >
+                    <Link
+                        :href="route('category.show', { category })"
+                        :class="[
+                            'px-4 py-2 rounded',
+                            isActiveFilter('all')
+                                ? 'bg-green-500 text-white'
+                                : 'bg-blue-500 text-white hover:bg-blue-700',
+                        ]"
+                        >Wszystkie</Link
+                    >
                 </div>
 
                 <!-- Activity Tiles -->
