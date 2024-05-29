@@ -1,23 +1,19 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, router } from "@inertiajs/vue3";
-import { computed } from "vue";
 
 const props = defineProps({
     category: Object,
 });
 
 const maxDate = () => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    return tomorrow.toISOString().slice(0, 10);
+    return new Date().toISOString().slice(0, 10);
 };
 
 const form = useForm({
     name: "",
     spent_time: "",
-    created_date: maxDate,
+    created_date: maxDate(),
 });
 
 const addActivity = () => {
@@ -91,7 +87,7 @@ const deleteActivity = (activity) => {
                                 v-model="form.created_date"
                                 type="date"
                                 id="created_date"
-                                :max="maxDate"
+                                :max="maxDate()"
                                 required
                                 class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                             />
