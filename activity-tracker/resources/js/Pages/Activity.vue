@@ -7,7 +7,18 @@ const props = defineProps({
     category: Object,
 });
 
-const form = useForm({ name: "", spent_time: "", created_date: "" });
+const maxDate = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().slice(0, 10);
+};
+
+const form = useForm({
+    name: "",
+    spent_time: "",
+    created_date: maxDate,
+});
 
 const addActivity = () => {
     form.post(route("activity.store", { category: props.category }), {
@@ -18,20 +29,6 @@ const addActivity = () => {
 const deleteActivity = (activity) => {
     router.delete(route("activity.destroy", { activity }));
 };
-//foramtowanie daty aby pozbyć się godzin 00:00:00 tylko dać sam czas w foramcie PL
-const formatDate = (date) => {
-    if (date) {
-        return new Date(date).toLocaleDateString("pl-PL");
-    }
-    return "";
-};
-
-const maxDate = computed(() => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    return tomorrow.toISOString().slice(0, 10);
-});
 </script>
 
 <template>
@@ -133,7 +130,12 @@ const maxDate = computed(() => {
                             Czas trwania: {{ activity.spent_time }}
                         </p>
                         <p class="text-sm text-gray-600">
-                            Dodane dnia: {{ formatDate(activity.created_date) }}
+                            Dodane dnia:
+                            {{
+                                new Date(
+                                    activity.created_date
+                                ).toLocaleDateString("pl-PL")
+                            }}
                         </p>
                     </div>
                 </div>

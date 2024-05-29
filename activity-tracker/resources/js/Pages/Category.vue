@@ -4,7 +4,7 @@ import { Head, useForm, Link, router } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { Bar } from "vue-chartjs";
 
-// Consider moveing it to separate component
+// Consider moving it to a separate component
 import {
     Chart as ChartJS,
     Title,
@@ -180,6 +180,33 @@ const form = useForm({
             <h3 class="text-xl font-semibold text-gray-800">
                 Statystyki kategorii:
             </h3>
+
+            <div class="flex space-x-4 my-4">
+                <!-- Do każdego linka doklejany jest odpowiedni params -->
+                <Link
+                    :href="route('category.index', { maxCreatedDate: 'today' })"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    >Dziś</Link
+                >
+                <Link
+                    :href="route('category.index', { maxCreatedDate: '7days' })"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    >7 dni</Link
+                >
+                <Link
+                    :href="
+                        route('category.index', { maxCreatedDate: '30days' })
+                    "
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    >30 dni</Link
+                >
+                <Link
+                    :href="route('category.index')"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    >Wszystkie</Link
+                >
+            </div>
+
             <div
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl mt-4 px-4"
             >
@@ -206,11 +233,11 @@ const form = useForm({
             </div>
         </div>
         <div
-    v-else
-    class="flex items-center justify-center py-12 bg-green-400 text-white-700 rounded-lg border border-black-900 text-2xl font-bold"
->
-    Brak danych
-</div>
+            v-else
+            class="flex items-center justify-center py-12 bg-green-400 text-white-700 rounded-lg border border-black-900 text-2xl font-bold"
+        >
+            Brak danych
+        </div>
 
         <div
             class="max-w-4xl rounded px-8 py-8 mx-auto bg-white"
