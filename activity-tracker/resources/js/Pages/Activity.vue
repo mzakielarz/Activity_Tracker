@@ -112,7 +112,10 @@ const isActiveFilter = (filter) => currentFilter.value === filter;
                     </form>
                 </div>
 
-                <div class="flex items-center justify-center space-x-4 my-4">
+                <div
+                    class="flex items-center justify-center space-x-4 my-4"
+                    v-if="category.activities.length"
+                >
                     <Link
                         :href="
                             route('category.show', {
